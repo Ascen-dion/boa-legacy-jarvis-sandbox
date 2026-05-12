@@ -1,9 +1,12 @@
 ' --- C:\Flight_Legacy_Framework\Libraries\Flight_App_Functions.qfl ---
 
 Function LaunchApp()
-    ' Launching via the OpenText Start Menu Shortcut
-    SystemUtil.Run "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenText Functional Testing\Sample Applications\Flight GUI.lnk"
-    Reporter.ReportEvent micPass, "Launch", "Flight GUI Application launched."
+    ' Dynamically pulls the application path from App_Config.xml
+    Dim targetAppPath
+    targetAppPath = Environment.Value("AppPath")
+    
+    SystemUtil.Run targetAppPath
+    Reporter.ReportEvent micPass, "Launch", "Application launched from Config: " & targetAppPath
 End Function
 
 Function FlightLogin(username, password)

@@ -1,0 +1,24 @@
+=========================================
+   JARVIS EXECUTION AUDIT LOG
+=========================================
+Test ID: TC_002
+Template: Invalid_Login_Flow.xml
+Environment: QA_Sandbox
+Start Time: 12-05-2026 12:56:01
+-----------------------------------------
+TEST DATA PARAMETERS:
+- Username: john
+- Password: wrongpass
+- FromCity: 
+- ToCity: 
+-----------------------------------------
+STEP TRACE:
+[12-05-2026 12:56:03] Step 1: LaunchApp -> SUCCESS
+[12-05-2026 12:56:05] Step 2: FlightLogin -> SUCCESS
+[12-05-2026 12:56:05] Step 3: VerifyLoginFailure -> SUCCESS
+[12-05-2026 12:56:06] Step 4: CloseApp -> SUCCESS
+=========================================
+FINAL STATUS: PASS
+END TIME: 12-05-2026 12:56:06
+DURATION: 5 seconds
+=========================================

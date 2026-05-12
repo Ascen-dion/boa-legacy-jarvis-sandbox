@@ -1,0 +1,8 @@
+<GlobalConfiguration>
+    <FrameworkSettings>
+        <WaitTime>10</WaitTime>
+        <LogLevel>INFO</LogLevel>
+        <ReportStyle>ExtentHTML</ReportStyle>
+        <MaxRetries>0</MaxRetries>
+    </FrameworkSettings>
+</GlobalConfiguration>
