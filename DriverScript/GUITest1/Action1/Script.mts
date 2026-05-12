@@ -87,18 +87,51 @@ For i = 2 To rowCount
         auditBuffer = auditBuffer & "-----------------------------------------" & vbCrLf
         auditBuffer = auditBuffer & "TEST DATA PARAMETERS:" & vbCrLf
         
-        ' --- B. DYNAMICALLY READ ALL EXCEL COLUMNS ---
-        ' This loop grabs every column from column 4 onwards, no matter how many there are
+        ' --- B. DYNAMICALLY READ RELATIONAL EXCEL DATA ---
         Dim testDataDict
         Set testDataDict = CreateObject("Scripting.Dictionary")
         
-        For c = 4 To colCount
-            headerName = objSheet.Cells(1, c).Value
-            cellValue = objSheet.Cells(i, c).Value
-            testDataDict.Add headerName, cellValue
-            
-            ' Add it to the Audit Log
-            auditBuffer = auditBuffer & "- " & headerName & ": " & cellValue & vbCrLf
+        ' 1. Read data from MasterControl (if any extra columns exist)
+        auditBuffer = auditBuffer & "-- MasterControl Data --" & vbCrLf
+        If colCount > 3 Then
+            For c = 4 To colCount
+                headerName = objSheet.Cells(1, c).Value
+                cellValue = objSheet.Cells(i, c).Value
+                testDataDict.Add headerName, cellValue
+                auditBuffer = auditBuffer & "- " & headerName & ": " & cellValue & vbCrLf
+            Next
+        End If
+        
+        ' 2. Relational Mapping: Scan all other sheets for the matching TestID
+        Dim childSheet, rIndex, childColCount
+        For Each childSheet In objWB.Sheets
+            If childSheet.Name <> "MasterControl" Then
+                
+                ' Scan Column 1 of the child sheet to find the matching TestID
+                For rIndex = 2 To childSheet.UsedRange.Rows.Count
+                    If childSheet.Cells(rIndex, 1).Value = testID Then
+                        auditBuffer = auditBuffer & "-- " & childSheet.Name & " Data --" & vbCrLf
+                        childColCount = childSheet.UsedRange.Columns.Count
+                        
+                        ' Read all columns for this matched row (Starting at 2 to skip TestID)
+                        For c = 2 To childColCount
+                            headerName = childSheet.Cells(1, c).Value
+                            cellValue = childSheet.Cells(rIndex, c).Value
+                            
+                            ' Inject into the master dictionary (Overwrite if duplicate exists)
+                            If testDataDict.Exists(headerName) Then
+                                testDataDict.Item(headerName) = cellValue
+                            Else
+                                testDataDict.Add headerName, cellValue
+                            End If
+                            
+                            auditBuffer = auditBuffer & "- " & headerName & ": " & cellValue & vbCrLf
+                        Next
+                        Exit For ' Row found and mapped, move to the next sheet
+                    End If
+                Next
+                
+            End If
         Next
         
         auditBuffer = auditBuffer & "-----------------------------------------" & vbCrLf
