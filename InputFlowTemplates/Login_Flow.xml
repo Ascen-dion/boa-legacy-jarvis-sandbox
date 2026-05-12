@@ -1,0 +1,6 @@
+<TestFlow>
+    <Keyword name="LaunchApp" />
+    <Keyword name="FlightLogin" />
+    <Keyword name="VerifyLoginSuccess" />
+    <Keyword name="CloseApp" />
+</TestFlow>

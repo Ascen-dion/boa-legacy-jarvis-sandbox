@@ -1,0 +1,50 @@
+' --- C:\Flight_Legacy_Framework\Libraries\Flight_App_Functions.qfl ---
+
+Function LaunchApp()
+    ' Launching via the OpenText Start Menu Shortcut
+    SystemUtil.Run "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenText Functional Testing\Sample Applications\Flight GUI.lnk"
+    Reporter.ReportEvent micPass, "Launch", "Flight GUI Application launched."
+End Function
+
+Function FlightLogin(username, password)
+    ' Updated to match the exact WpfWindow name in your Object Repository
+    WpfWindow("OpenText MyFlight Sample").WpfEdit("agentName").Set username
+    WpfWindow("OpenText MyFlight Sample").WpfEdit("password").Set password
+    
+    ' Updated to match the exact Button name in your Object Repository
+    WpfWindow("OpenText MyFlight Sample").WpfButton("OK").Click
+End Function
+
+Function VerifyLoginSuccess()
+    If WpfWindow("OpenText MyFlight Sample").WpfComboBox("fromCity").Exist(5) Then
+        Reporter.ReportEvent micPass, "Login", "Login successful. Search screen loaded."
+    Else
+        Reporter.ReportEvent micFail, "Login", "Login failed unexpectedly."
+    End If
+End Function
+
+Function VerifyLoginFailure()
+    ' Note: If you don't have an "errorText" object in your OR yet, this will fail. 
+    ' We bypass it for now by checking for the Login Failed dialog instead.
+    If WpfWindow("OpenText MyFlight Sample").Dialog("Login Failed").Exist(5) Then
+        Reporter.ReportEvent micPass, "Negative Login", "Invalid credentials properly rejected."
+        WpfWindow("OpenText MyFlight Sample").Dialog("Login Failed").Close
+    Else
+        Reporter.ReportEvent micFail, "Negative Login", "Error message not displayed."
+    End If
+End Function
+
+Function SearchFlight(fromCity, toCity)
+    WpfWindow("OpenText MyFlight Sample").WpfComboBox("fromCity").Select fromCity
+    WpfWindow("OpenText MyFlight Sample").WpfComboBox("toCity").Select toCity
+    
+    ' Updated to match the exact Button name in your Object Repository
+    WpfWindow("OpenText MyFlight Sample").WpfButton("FIND FLIGHTS").Click
+    Reporter.ReportEvent micPass, "Flight Search", "Searched for flights from " & fromCity & " to " & toCity
+End Function
+
+Function CloseApp()
+    If WpfWindow("OpenText MyFlight Sample").Exist(2) Then
+        WpfWindow("OpenText MyFlight Sample").Close
+    End If
+End Function

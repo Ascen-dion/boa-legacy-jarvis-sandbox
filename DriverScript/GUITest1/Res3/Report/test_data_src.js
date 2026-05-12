@@ -1,0 +1,1 @@
+﻿var __testDataSource={items:[{dataFilePath:'Default.xlsx',dataFileFormat:'excel',dataFileFolder:'C:\\Users\\saisr\\Downloads\\Flight_Legacy_Framework\\DriverScript\\GUITest1\\Res3',namePairs:[]}]};
